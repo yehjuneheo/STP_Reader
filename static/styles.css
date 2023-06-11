@@ -1,0 +1,57 @@
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    color: #343a40;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 90vh; /* Change this value as needed */
+}
+
+.file-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1em auto;
+    padding: 2em;
+    height: 70%; /* Change this value as needed */
+    background-color: #eee; /* Change this value as needed */
+    border: 2px dashed #ccc; /* Change this value as needed */
+    border-radius: 20px; /* Change this value as needed */
+    cursor: pointer;
+}
+
+.file-input.dragging {
+    background-color: #ddd;  /* choose the color you want */
+}
+
+#upload-text {
+    font-size: 2em; /* Change this value as needed */
+    margin-bottom: 1em; /* Change this value as needed */
+}
+
+#drag-drop-icon {
+    width: 50px; /* Change this value as needed */
+    height: 50px; /* Change this value as needed */
+}
+
+#submit-button {
+    display: block;
+    width: 200px; /* Change this value as needed */
+    height: 50px; /* Change this value as needed */
+    margin: 1em auto;
+}
+
+
+#loading-icon {
+    display: none;
+    width: 50px;
+    height: 50px;
+}

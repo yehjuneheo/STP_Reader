@@ -1,0 +1,96 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Upload a STEP File{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Upload a STEP File</h1>
+    <form id="upload-form" method=post enctype=multipart/form-data>
+        <label id="file-input" class="form-control file-input" for="hidden-file">
+            <div id="upload-text">Drag files here or click to upload</div>
+            <img src="{{ url_for('static', filename='drag_and_drop_icon.png') }}" id="drag-drop-icon"/>
+            <img src="{{ url_for('static', filename='loading_icon.gif') }}" id="loading-icon" style="display: none; width: 50px; height: 50px;"/>
+            <input id="hidden-file" type="file" name="file" accept=".stp" style="display: none;">
+        </label>
+        <input id="submit-button" type=submit value=Upload class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    var form = $('#upload-form');
+    var input = $('#hidden-file');
+    var loadingIcon = $('#loading-icon');
+
+    $('#file-input').on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('dragging');
+    });
+
+    $('#file-input').on('dragleave drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).removeClass('dragging');
+    });
+
+    $('#file-input').on('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var files = e.originalEvent.dataTransfer.files;
+        if(files[0].name.split('.').pop().toLowerCase() !== 'stp'){
+            alert('Only .stp files are accepted');
+        }else{
+            input.prop('files', files);
+            $('#upload-text').text('Selected File: ' + files[0].name);
+        }
+    });
+
+    input.on('change', function(e) {
+        var files = e.target.files;
+        if(files[0].name.split('.').pop().toLowerCase() !== 'stp'){
+            alert('Only .stp files are accepted');
+        }else{
+            $('#upload-text').text('Selected File: ' + files[0].name);
+        }
+    });
+
+    form.on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData();
+        formData.append('file', input.prop('files')[0]);
+
+        loadingIcon.show();
+
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                alert('File uploaded successfully.\n' + data);
+                loadingIcon.hide();
+                $('#upload-text').text('Drag files here or click to upload');
+                input.val('');
+            },
+            error: function() {
+                alert('Error uploading file.');
+                loadingIcon.hide();
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

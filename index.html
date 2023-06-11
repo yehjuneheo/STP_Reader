@@ -1,0 +1,31 @@
+<!doctype html>
+<title>Display 3D Model</title>
+<h1>Surface area: {{ surface_area }} square units</h1>
+<div id="canvas"></div>
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 2;
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas').appendChild(renderer.domElement);
+
+    var loader = new THREE.GLTFLoader();
+    loader.load('{{ url_for("static", filename=gltf_filename) }}', function(gltf) {
+        scene.add(gltf.scene);
+        animate();
+    }, undefined, function(error) {
+        console.error(error);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+</script>
+<form action="/">
+    <input type="submit" value="Back to upload" />
+</form>
